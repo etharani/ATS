@@ -42,3 +42,6 @@
 
 # Visual Studio folder
 .vs
+
+# Node.js dependencies
+node_modules/
