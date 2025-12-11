@@ -95,7 +95,6 @@ export default function App(){
   return (
     <div className="app">
       <Header onOpenDocs={() => window.open('https://example.com/docs','_blank')} />
-
       <main className="main" role="main">
         <section className="panel left" aria-label="Controls">
           <form onSubmit={onSubmit} className="form">
@@ -148,10 +147,10 @@ export default function App(){
               <button className="btn primary" type="submit" disabled={loading}>
                 {loading ? "Analyzing..." : "Upload & Analyze"}
               </button>
-              <button type="button" className="btn" onClick={onUpdate} disabled={loading || !results}>
+              <button type="button" className="btn primary" onClick={onUpdate} disabled={loading || !results}>
                 Update
               </button>
-              <button type="button" className="btn ghost" onClick={clearAll}>
+              <button type="button" className="btn primary" onClick={clearAll}>
                 Clear
               </button>
             </div>
@@ -208,7 +207,7 @@ export default function App(){
               </div>
             </>
           ) : (
-            <div className="empty">
+            <div className="empty label">
               <h3>No results yet</h3>
               <p className="muted">Upload resumes to see ranked results here.</p>
             </div>

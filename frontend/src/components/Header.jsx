@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Header({ onOpenDocs }) {
   return (
-    <header className="site-header">
+    <header className="site-header ">
       <div className="header-inner">
         <div className="brand">
           <div className="logo" aria-hidden>
@@ -12,8 +12,8 @@ export default function Header({ onOpenDocs }) {
             </svg>
           </div>
           <div className="brand-text">
-            <div className="brand-title">Simple ATS</div>
-            <div className="brand-sub">Resume ranking & quick previews</div>
+            <div className="brand-title">Nanthi Ventures</div>
+            <div className="brand-sub">Applicant Tracking System</div>
           </div>
         </div>
       </div>
