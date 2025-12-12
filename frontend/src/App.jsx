@@ -103,7 +103,7 @@ export default function App(){
               placeholder="Paste the job description (plain text recommended)"
               value={jobDesc}
               onChange={e=>setJobDesc(e.target.value)}
-              rows={8}
+              rows={15}
               className="input textarea"
             />
 
