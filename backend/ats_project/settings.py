@@ -1,14 +1,24 @@
 # backend/ats_project/settings.py
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'dev-key'
+# SECRET_KEY = 'dev-key'
+# DJANGO_SECRET_KEY = "w1w2w3w4jjkoo5685875"
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-key')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+
+
+# In production you may set STATIC_ROOT and run collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # DEV: set to False in production
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['tharaniats.azurewebsites.net']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 # -------------------------
 # Installed apps
@@ -41,6 +51,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'ats_project.urls'
@@ -93,8 +105,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'frontend' / 'dist',     # vite production output (if you don't copy)
 ]
 
-# In production you may set STATIC_ROOT and run collectstatic
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # -------------------------
 # CORS (dev only)
@@ -104,6 +115,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# add static setting to depoly the code by tharani
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 
 # -------------------------
