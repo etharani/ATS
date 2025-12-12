@@ -276,6 +276,8 @@ body{
 .footer-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:13px; margin-right:12px; transition: color .20s ease; }
 .footer-link:hover { color: var(--accent); }
 
+.social-icons a {margin-right: 10px;display: inline-flex;align-items: center;}
+.footer-social:hover svg {color: #0a66c2; /* LinkedIn blue or your brand color */transform: scale(1.1);transition: 0.2s ease;}
 /* small utilities */
 .muted{ color:var(--muted) }
 .small{ font-size:13px }
