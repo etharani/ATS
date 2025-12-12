@@ -5,24 +5,24 @@ import Footer from "./components/Footer";
 /* ---------- helpers ---------- */
 function filesize(n) {
   if (!n && n !== 0) return "";
-  const units = ["B","KB","MB","GB"];
+  const units = ["B", "KB", "MB", "GB"];
   let i = 0;
-  while (n >= 1024 && i < units.length-1) { n /= 1024; i++; }
-  return `${Math.round(n*10)/10} ${units[i]}`;
+  while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+  return `${Math.round(n * 10) / 10} ${units[i]}`;
 }
 
-function ScoreBar({score}) {
+function ScoreBar({ score }) {
   const color = score >= 80 ? "bar--green" : score >= 50 ? "bar--orange" : "bar--red";
   return (
     <div className="scorebar" aria-hidden>
-      <div className={`bar ${color}`} style={{width: `${Math.max(0, Math.min(100, score))}%`}} />
-      <div className="score-label">{Math.round((score||0)*100)/100}%</div>
+      <div className={`bar ${color}`} style={{ width: `${Math.max(0, Math.min(100, score))}%` }} />
+      <div className="score-label">{Math.round((score || 0) * 100) / 100}%</div>
     </div>
   );
 }
 
 /* ---------- App ---------- */
-export default function App(){
+export default function App() {
   const [files, setFiles] = useState([]);
   const [jobDesc, setJobDesc] = useState("");
   const [results, setResults] = useState(null);
@@ -76,7 +76,7 @@ export default function App(){
       }
       const data = contentType.includes('application/json') ? await res.json() : null;
       setResults(data);
-      setTimeout(()=> document.getElementById('results')?.scrollIntoView({behavior:'smooth'}), 150);
+      setTimeout(() => document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' }), 150);
     } catch (err) {
       console.error(err);
       alert("Upload failed: " + (err.message || err));
@@ -94,7 +94,7 @@ export default function App(){
 
   return (
     <div className="app">
-      <Header onOpenDocs={() => window.open('https://example.com/docs','_blank')} />
+      <Header onOpenDocs={() => window.open('https://example.com/docs', '_blank')} />
       <main className="main" role="main">
         <section className="panel left" aria-label="Controls">
           <form onSubmit={onSubmit} className="form">
@@ -102,17 +102,17 @@ export default function App(){
             <textarea
               placeholder="Paste the job description (plain text recommended)"
               value={jobDesc}
-              onChange={e=>setJobDesc(e.target.value)}
+              onChange={e => setJobDesc(e.target.value)}
               rows={15}
               className="input textarea"
             />
 
-            <label className="label" style={{marginTop:12}}>Resumes (PDF)</label>
+            <label className="label" style={{ marginTop: 12 }}>Resumes (PDF)</label>
 
             <div
               className={`dropzone ${dragOver ? 'dropzone--over' : ''}`}
-              onDragOver={(e)=>{ e.preventDefault(); setDragOver(true); }}
-              onDragLeave={()=>setDragOver(false)}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               onClick={() => inputRef.current.click()}
               role="button"
@@ -125,7 +125,7 @@ export default function App(){
                 accept="application/pdf"
                 multiple
                 onChange={handlePick}
-                style={{display:'none'}}
+                style={{ display: 'none' }}
               />
               <div>
                 <strong>Drag & drop PDFs here</strong>
@@ -143,7 +143,7 @@ export default function App(){
               ))}
             </div>
 
-            <div className="actions" style={{marginTop:14}}>
+            <div className="actions" style={{ marginTop: 14 }}>
               <button className="btn primary" type="submit" disabled={loading}>
                 {loading ? "Analyzing..." : "Upload & Analyze"}
               </button>
@@ -171,7 +171,7 @@ export default function App(){
             <>
               <div className="results-header">
                 <h2>Results</h2>
-                <div className="muted small">Keywords: {results.keywords?.slice(0,40).join(', ')}</div>
+                <div className="muted small">Keywords: {results.keywords?.slice(0, 40).join(', ')}</div>
               </div>
 
               <div className="results-list">
@@ -185,7 +185,7 @@ export default function App(){
                         {(r.parsed?.contacts?.linkedin?.length || r.parsed?.contacts?.github?.length) ? <span className="badge">Links</span> : <span className="badge badge--muted">No Links</span>}
                       </div>
 
-                      <div className="meta small" style={{marginTop:6}}>
+                      <div className="meta small" style={{ marginTop: 6 }}>
                         <div>Matches: {r.parsed?.matches?.length || 0} / {results.keywords?.length || 0}</div>
                         <div>Contact: {r.parsed?.contacts?.name || <span className="muted">Unknown</span>}</div>
                       </div>
@@ -194,12 +194,15 @@ export default function App(){
                     <div className="result-right">
                       <ScoreBar score={r.score || 0} />
                       <div className="card-actions">
-                        <button className="btn small" onClick={()=>setPreview({filename: r.filename, text: r.excerpt || r.parsed?.contacts?.name || 'No preview available'})}>
+                        <button
+                          className="btn primary"
+                          onClick={() => {
+                            const url = r.download_url || `${window.location.origin}/media/uploads/${encodeURIComponent(r.filename)}`;
+                            setPreview({ filename: r.filename, url });
+                          }}
+                        >
                           Preview
                         </button>
-                        <a className="btn small ghost" href="#" onClick={(e)=>{ e.preventDefault(); alert('Download not implemented'); }}>
-                          Download
-                        </a>
                       </div>
                     </div>
                   </article>
@@ -219,11 +222,34 @@ export default function App(){
       {preview && (
         <div className="modal" onClick={() => setPreview(null)} role="dialog" aria-modal="true">
           <div className="modal-body" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <strong>{preview.filename}</strong>
-              <button className="btn small ghost" onClick={() => setPreview(null)}>Close</button>
+            <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+              <div>
+                <strong style={{ fontSize: 16 }}>{preview.filename}</strong>
+                <div className="muted small" style={{ marginTop: 4 }}>Previewing PDF — scroll to view all pages</div>
+              </div>
+
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <a
+                  className="btn small"
+                  href={preview.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Open in new tab"
+                >
+                  Open
+                </a>
+                <button className="btn small ghost" onClick={() => setPreview(null)}>Close</button>
+              </div>
             </div>
-            <pre className="preview-text">{preview.text}</pre>
+
+            <div style={{ height: '72vh', marginTop: 8, display: 'flex', borderRadius: 8, overflow: 'hidden', border: '1px solid var(--border)' }}>
+              {/* Use <iframe> for most browsers. If that fails with CORS, see notes below. */}
+              <iframe
+                src={preview.url}
+                title={preview.filename}
+                style={{ flex: 1, border: 0, width: '100%', height: '100%' }}
+              />
+            </div>
           </div>
         </div>
       )}

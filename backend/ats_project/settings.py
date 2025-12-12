@@ -101,6 +101,11 @@ STATICFILES_DIRS = [
 # -------------------------
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
 # -------------------------
 # Other recommended dev settings
 # -------------------------
