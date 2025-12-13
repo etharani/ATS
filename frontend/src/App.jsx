@@ -21,7 +21,9 @@ function ScoreBar({ score }) {
   );
 }
 
-/* ---------- App ---------- */
+const API_BASE_URL = 'http://20.81.177.166:8000/api'
+const BACKEND_BASE_URL = 'http://20.81.177.166:8000'
+
 export default function App() {
   const [files, setFiles] = useState([]);
   const [jobDesc, setJobDesc] = useState("");
@@ -66,8 +68,8 @@ export default function App() {
     setResults(null);
     try {
       const fd = buildFormData();
-      // relative path so dev proxy or same-origin works
-      const res = await fetch('/api/upload/', { method: 'POST', body: fd });
+      // Use API_BASE_URL to handle both dev (proxy) and production (direct backend)
+      const res = await fetch(`${API_BASE_URL}/upload/`, { method: 'POST', body: fd });
       const contentType = res.headers.get('content-type') || "";
       if (!res.ok) {
         const txt = contentType.includes('application/json') ? await res.json() : await res.text();
@@ -197,7 +199,17 @@ export default function App() {
                         <button
                           className="btn primary"
                           onClick={() => {
-                            const url = r.download_url || `${window.location.origin}/media/uploads/${encodeURIComponent(r.filename)}`;
+                            // Construct the correct URL pointing to Azure backend
+                            let url;
+                            if (r.download_url) {
+                              // If download_url is provided, use it (handle both absolute and relative URLs)
+                              url = r.download_url.startsWith('http') 
+                                ? r.download_url 
+                                : `${BACKEND_BASE_URL}${r.download_url.startsWith('/') ? r.download_url : '/' + r.download_url}`;
+                            } else {
+                              // Fallback to Azure backend media URL
+                              url = `${BACKEND_BASE_URL}/media/uploads/${encodeURIComponent(r.filename)}`;
+                            }
                             setPreview({ filename: r.filename, url });
                           }}
                         >
@@ -243,11 +255,12 @@ export default function App() {
             </div>
 
             <div style={{ height: '72vh', marginTop: 8, display: 'flex', borderRadius: 8, overflow: 'hidden', border: '1px solid var(--border)' }}>
-              {/* Use <iframe> for most browsers. If that fails with CORS, see notes below. */}
+              {/* Use <iframe> for PDF preview. If CORS blocks it, users can use the "Open" button. */}
               <iframe
-                src={preview.url}
+                src={`${preview.url}#toolbar=1`}
                 title={preview.filename}
                 style={{ flex: 1, border: 0, width: '100%', height: '100%' }}
+                type="application/pdf"
               />
             </div>
           </div>
