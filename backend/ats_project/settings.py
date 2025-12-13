@@ -4,21 +4,23 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY = 'dev-key'
+# <-------Clod API---------->
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-key')
+# DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
+
 # DJANGO_SECRET_KEY = "w1w2w3w4jjkoo5685875"
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-key')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+# ALLOWED_HOSTS = ['tharaniats.azurewebsites.net']
+
+# DEV: set to False in production
+
+ALLOWED_HOSTS = ['*']
+DEBUG = True
+SECRET_KEY = 'dev-key'
 
 
 # In production you may set STATIC_ROOT and run collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# DEV: set to False in production
-# DEBUG = True
-
-# ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['tharaniats.azurewebsites.net']
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 # -------------------------
 # Installed apps

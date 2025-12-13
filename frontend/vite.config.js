@@ -9,8 +9,8 @@ export default defineConfig({
     proxy: {
       // Proxy any request starting with /api to Django backend at :8000
       '/api': {
-        // target: 'http://localhost:8000',
-        target: 'https://tharaniats.azurewebsites.net/',
+         target: 'http://localhost:8000',
+       // target: 'https://tharaniats.azurewebsites.net/',
         changeOrigin: true,
         secure: false,
         // rewrite not needed because we want /api/upload => forwarded as /api/upload
