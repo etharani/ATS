@@ -9,7 +9,7 @@ export default defineConfig({
     proxy: {
       // Proxy any request starting with /api to Django backend at :8000
       '/api': {
-         target: 'http://localhost:8000',
+         target: 'http://20.81.177.166:8000/',
        // target: 'https://tharaniats.azurewebsites.net/',
         changeOrigin: true,
         secure: false,
